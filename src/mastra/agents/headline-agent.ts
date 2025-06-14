@@ -59,6 +59,9 @@ export const headlineAgent = new Agent({
       Brief Explanation: [1-2 sentences explaining how well the content aligns with the title]
 
       Key Misalignments: [Specific ways content diverges from title, what the main focus was if not the headline, or "None" if well-aligned]
+
+      Objectivity Explanation: [2-3 sentences explaining the bias or objectivity]
+      **End Output**
 `,
   //model: anthropic('claude-3-7-sonnet-20250219'),
   model: xai('grok-3'),
