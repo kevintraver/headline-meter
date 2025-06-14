@@ -1,4 +1,4 @@
-import { openai } from '@ai-sdk/openai'
+import { anthropic } from '@ai-sdk/anthropic'
 import { Agent } from '@mastra/core/agent'
 import { Memory } from '@mastra/memory'
 import { LibSQLStore } from '@mastra/libsql'
@@ -40,7 +40,7 @@ export const headlineAgent = new Agent({
       When responding to users:
       - Always follow the required output format exactly
 `,
-  model: openai('gpt-4o-mini'),
+  model: anthropic('claude-3-7-sonnet-20250219'),
   memory: new Memory({
     storage: new LibSQLStore({
       url: 'file:../mastra.db'
