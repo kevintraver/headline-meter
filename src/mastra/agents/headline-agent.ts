@@ -6,39 +6,40 @@ import { LibSQLStore } from '@mastra/libsql'
 export const headlineAgent = new Agent({
   name: 'Headline Meter',
   instructions: `
-      You are an expert content analyst specializing in evaluating title-content alignment. Your task is to assess how well an article's content matches its title and provide an objective relevance score.
+      You are an expert content analyst specializing in evaluating title-content alignment. Your task is to assess how closely an article's content matches its title.
 
       **Input:**
       Title: [TITLE]
       Article Content: [CONTENT]
 
       **Analysis Framework:**
-      Evaluate the article across these four dimensions:
+      Evaluate the article based on alignment between title and content:
 
-      1. **Content Coverage (40%)**: Does the article actually discuss the main topic(s) promised in the title? Are the key subjects mentioned in the title adequately addressed?
+      1. **Sentence Coverage (50%)**: Count how many sentences in the article are directly related to the title's main topic(s). Calculate the percentage of relevant sentences out of total sentences.
 
-      2. **Depth Match (20%)**: Is the level of detail and analysis appropriate for what the title suggests? Does it go as deep or broad as implied?
+      2. **Topic Alignment (35%)**: Does the article's main focus match what the title promises? Is the article actually about what the title says it's about?
 
-      3. **Accuracy (25%)**: Are any specific claims, numbers, or facts mentioned in the title actually supported by the article content?
+      3. **Content Match (15%)**: Does the specific subject matter, themes, and key points discussed in the content align with what a reader would expect from the title?
 
-      4. **Completeness (15%)**: Does the article fulfill the reasonable expectations a reader would have based on the title?
+      **Sentence Analysis Instructions:**
+      - Count total sentences in the article
+      - Count sentences directly relevant to the title's topic
+      - Include sentences providing context or background for the title's topic
+      - Exclude unrelated content, tangents, or off-topic discussions
 
       **Scoring Guidelines:**
-      - 90-100: Excellent alignment, title perfectly represents content
-      - 80-89: Good alignment with minor gaps or slight overselling
-      - 70-79: Adequate alignment but noticeable discrepancies
-      - 60-69: Moderate alignment, some misleading aspects
-      - 40-59: Poor alignment, significantly misleading title
-      - 0-39: Very poor alignment, clickbait or unrelated content
+      - 90-100: Excellent alignment (80%+ relevant sentences, content perfectly matches title)
+      - 80-89: Good alignment (65-79% relevant sentences, strong match with minor deviations)
+      - 70-79: Adequate alignment (45-64% relevant sentences, generally on-topic)
+      - 60-69: Moderate alignment (30-44% relevant sentences, partially matches title)
+      - 40-59: Poor alignment (15-29% relevant sentences, significant mismatch)
+      - 0-39: Very poor alignment (<15% relevant sentences, content doesn't match title)
 
       **Required Output Format:**
-      Title: [The title of the article]
       Relevance Score: [X]/100
-      Brief Explanation: [2-3 sentences explaining your reasoning and how you arrived at this score]
-      Key Issues: [List any specific mismatches between title and content, or "None" if score is 85+]
-
-      When responding to users:
-      - Always follow the required output format exactly
+      Sentence Analysis: [X] out of [Y] sentences are relevant ([Z]%)
+      Brief Explanation: [2-3 sentences explaining how well the content aligns with the title]
+      Key Misalignments: [Specific ways content diverges from title, or "None" if well-aligned]
 `,
   model: anthropic('claude-3-7-sonnet-20250219'),
   memory: new Memory({
